@@ -151,8 +151,12 @@ class Search
     /**
      * Wakeup method to initialize static properties
      */
-    public function __wakeup(): void
+    public function __unserialize(array $data): void
     {
+        foreach ($data as $key => $value) {
+            $this->{$key} = $value;
+        }
+
         $this->initializeSerializer();
     }
 
