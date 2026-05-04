@@ -141,36 +141,6 @@ class Search
     private array $endpoints = [];
 
     /**
-     * Constructor to initialize static properties
-     */
-    public function __construct()
-    {
-        $this->initializeSerializer();
-    }
-
-    /**
-     * Wakeup method to initialize static properties
-     */
-    public function __unserialize(array $data): void
-    {
-        foreach ($data as $key => $value) {
-            $this->{$key} = $value;
-        }
-
-        $this->initializeSerializer();
-    }
-
-    /**
-     * Initializes the serializer
-     */
-    private function initializeSerializer(): void
-    {
-        if (self::$serializer === null) {
-            self::$serializer = new OrderedSerializer();
-        }
-    }
-
-    /**
      * Destroys search endpoint.
      */
     public function destroyEndpoint(string $type): void
@@ -687,6 +657,10 @@ class Search
 
     public function toArray()
     {
+        if (self::$serializer === null) {
+            self::$serializer = new OrderedSerializer();
+        }
+
         $output = self::$serializer->normalize($this->endpoints);
 
         $params = [

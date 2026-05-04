@@ -47,7 +47,7 @@ class SearchTest extends \PHPUnit\Framework\TestCase
         $reflection->setStaticPropertyValue('serializer', null);
 
         $search->setScroll('5m');
-        $search->__wakeup();
+        $search->toArray();
 
         $val = $reflection->getStaticPropertyValue('serializer');
         static::assertNotEmpty($val);
@@ -83,12 +83,12 @@ class SearchTest extends \PHPUnit\Framework\TestCase
 
     public function testInitializeSerializer(): void
     {
-        $search = new \ReflectionClass(Search::class);
-        $search->setStaticPropertyValue('serializer', null);
+        $reflection = new \ReflectionClass(Search::class);
+        $reflection->setStaticPropertyValue('serializer', null);
 
-        new Search();
+        (new Search())->toArray();
 
-        static::assertInstanceOf(OrderedSerializer::class, $search->getStaticPropertyValue('serializer'));
+        static::assertInstanceOf(OrderedSerializer::class, $reflection->getStaticPropertyValue('serializer'));
     }
 
     public function testToArray(): void
