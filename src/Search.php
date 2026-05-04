@@ -133,8 +133,6 @@ class Search
      */
     private ?string $scroll = null;
 
-    private static ?OrderedSerializer $serializer = null;
-
     /**
      * @var AbstractSearchEndpoint[]
      */
@@ -657,11 +655,7 @@ class Search
 
     public function toArray()
     {
-        if (self::$serializer === null) {
-            self::$serializer = new OrderedSerializer();
-        }
-
-        $output = self::$serializer->normalize($this->endpoints);
+        $output = OrderedSerializer::normalize($this->endpoints);
 
         $params = [
             'from' => 'from',
