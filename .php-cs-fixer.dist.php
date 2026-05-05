@@ -50,6 +50,7 @@ return (new PhpCsFixer\Config())
         'php_unit_test_case_static_method_calls' => true,
         'fully_qualified_strict_types' => true,
         'php_unit_internal_class' => true,
+        'declare_strict_types' => true,
     ])
     ->setFinder(PhpCsFixer\Finder::create()
         ->exclude('vendor')
