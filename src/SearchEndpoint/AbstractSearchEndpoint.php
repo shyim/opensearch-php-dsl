@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 /*
  * This file is part of the ONGR package.
@@ -82,7 +82,7 @@ abstract class AbstractSearchEndpoint extends AbstractNormalizable
         return $this->container;
     }
 
-    public function getBool()
+    public function getBool(): void
     {
         throw new \BadFunctionCallException(sprintf("Endpoint %s doesn't support bool statements", static::NAME));
     }
