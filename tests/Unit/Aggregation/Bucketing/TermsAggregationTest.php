@@ -260,6 +260,38 @@ class TermsAggregationTest extends \PHPUnit\Framework\TestCase
         ], $aggregation->toArray());
     }
 
+    /**
+     * Tests backwards compatibility of addParameter('size') with new setSize().
+     */
+    public function testTermsAggregationSizeAddParameterBackwardsCompatibility(): void
+    {
+        $viaSetter = new TermsAggregation('test_agg');
+        $viaSetter->setField('test_field');
+        $viaSetter->setSize(10);
+
+        $viaAddParameter = new TermsAggregation('test_agg');
+        $viaAddParameter->setField('test_field');
+        $viaAddParameter->addParameter('size', 10);
+
+        static::assertEquals($viaSetter->toArray(), $viaAddParameter->toArray());
+    }
+
+    /**
+     * Tests backwards compatibility of addParameter('shard_size') with new setShardSize().
+     */
+    public function testTermsAggregationShardSizeAddParameterBackwardsCompatibility(): void
+    {
+        $viaSetter = new TermsAggregation('test_agg');
+        $viaSetter->setField('test_field');
+        $viaSetter->setShardSize(20);
+
+        $viaAddParameter = new TermsAggregation('test_agg');
+        $viaAddParameter->setField('test_field');
+        $viaAddParameter->addParameter('shard_size', 20);
+
+        static::assertEquals($viaSetter->toArray(), $viaAddParameter->toArray());
+    }
+
     public function testTermsAggregationIdScript(): void
     {
         $idScript = ['id' => 'scriptId', 'params' => ['param' => 'value']];
