@@ -20,7 +20,6 @@ use OpenSearchDSL\Query\FullText\MatchQuery;
 use OpenSearchDSL\Query\MatchAllQuery;
 use OpenSearchDSL\Query\TermLevel\TermsQuery;
 use OpenSearchDSL\Search;
-use OpenSearchDSL\Serializer\OrderedSerializer;
 use OpenSearchDSL\Sort\FieldSort;
 use OpenSearchDSL\Sort\NestedSort;
 use OpenSearchDSL\Suggest\Suggest;
@@ -43,14 +42,7 @@ class SearchTest extends \PHPUnit\Framework\TestCase
     public function testScrollUriParameter(): void
     {
         $search = new Search();
-        $reflection = new \ReflectionClass($search);
-        $reflection->setStaticPropertyValue('serializer', null);
-
         $search->setScroll('5m');
-        $search->__wakeup();
-
-        $val = $reflection->getStaticPropertyValue('serializer');
-        static::assertNotEmpty($val);
 
         static::assertArrayHasKey('scroll', $search->getUriParams());
     }
@@ -79,16 +71,6 @@ class SearchTest extends \PHPUnit\Framework\TestCase
         static::assertArrayHasKey('post_filter', $search->toArray());
 
         static::assertInstanceOf(BoolQuery::class, $search->getPostFilters());
-    }
-
-    public function testInitializeSerializer(): void
-    {
-        $search = new \ReflectionClass(Search::class);
-        $search->setStaticPropertyValue('serializer', null);
-
-        new Search();
-
-        static::assertInstanceOf(OrderedSerializer::class, $search->getStaticPropertyValue('serializer'));
     }
 
     public function testToArray(): void

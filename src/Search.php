@@ -133,38 +133,10 @@ class Search
      */
     private ?string $scroll = null;
 
-    private static ?OrderedSerializer $serializer = null;
-
     /**
      * @var AbstractSearchEndpoint[]
      */
     private array $endpoints = [];
-
-    /**
-     * Constructor to initialize static properties
-     */
-    public function __construct()
-    {
-        $this->initializeSerializer();
-    }
-
-    /**
-     * Wakeup method to initialize static properties
-     */
-    public function __wakeup(): void
-    {
-        $this->initializeSerializer();
-    }
-
-    /**
-     * Initializes the serializer
-     */
-    private function initializeSerializer(): void
-    {
-        if (self::$serializer === null) {
-            self::$serializer = new OrderedSerializer();
-        }
-    }
 
     /**
      * Destroys search endpoint.
@@ -683,7 +655,7 @@ class Search
 
     public function toArray()
     {
-        $output = self::$serializer->normalize($this->endpoints);
+        $output = OrderedSerializer::normalize($this->endpoints);
 
         $params = [
             'from' => 'from',

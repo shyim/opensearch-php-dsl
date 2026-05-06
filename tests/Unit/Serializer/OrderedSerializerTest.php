@@ -19,8 +19,6 @@ class OrderedSerializerTest extends TestCase
 {
     public function testOrdering(): void
     {
-        $serializer = new OrderedSerializer();
-
         $search = new Search();
         $search->addQuery(new MatchAllQuery());
         $search->addPostFilter(new TermsQuery('foo', ['bar']));
@@ -36,7 +34,7 @@ class OrderedSerializerTest extends TestCase
                     'match_all' => new \stdClass(),
                 ],
             ],
-            $serializer->normalize(
+            OrderedSerializer::normalize(
                 [
                     $search->getEndpoint(QueryEndpoint::NAME),
                     $search->getEndpoint(PostFilterEndpoint::NAME),
@@ -47,13 +45,11 @@ class OrderedSerializerTest extends TestCase
 
     public function testNullOrEmptyArrayFieldGetsDropped(): void
     {
-        $serializer = new OrderedSerializer();
-
         $search = new Search();
 
         static::assertSame(
             [],
-            $serializer->normalize(
+            OrderedSerializer::normalize(
                 [
                     $search->getEndpoint(HighlightEndpoint::NAME),
                     $search->getEndpoint(AggregationsEndpoint::NAME),
@@ -64,15 +60,13 @@ class OrderedSerializerTest extends TestCase
 
     public function testNonObjects(): void
     {
-        $serializer = new OrderedSerializer();
-
         static::assertSame(
             [
                 'test' => 'string',
                 'test1' => 1,
                 'test2' => 1.5,
             ],
-            $serializer->normalize(
+            OrderedSerializer::normalize(
                 [
                     'test' => 'string',
                     'test1' => 1,

@@ -64,10 +64,7 @@ class QueryEndpoint extends AbstractSearchEndpoint
         return self::DEFAULT_ORDER;
     }
 
-    /**
-     * @return BoolQuery|null
-     */
-    public function getBool()
+    public function getBool(): ?BoolQuery
     {
         return $this->bool;
     }

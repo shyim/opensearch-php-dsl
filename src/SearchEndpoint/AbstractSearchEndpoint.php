@@ -13,6 +13,7 @@ namespace OpenSearchDSL\SearchEndpoint;
 
 use OpenSearchDSL\BuilderInterface;
 use OpenSearchDSL\ParametersTrait;
+use OpenSearchDSL\Query\Compound\BoolQuery;
 use OpenSearchDSL\Serializer\Normalizer\AbstractNormalizable;
 
 /**
@@ -82,7 +83,7 @@ abstract class AbstractSearchEndpoint extends AbstractNormalizable
         return $this->container;
     }
 
-    public function getBool()
+    public function getBool(): ?BoolQuery
     {
         throw new \BadFunctionCallException(sprintf("Endpoint %s doesn't support bool statements", static::NAME));
     }

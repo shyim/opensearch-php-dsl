@@ -15,9 +15,9 @@ use OpenSearchDSL\SearchEndpoint\AbstractSearchEndpoint;
 
 class OrderedSerializer
 {
-    public function normalize($data)
+    public static function normalize($data)
     {
-        $data = is_array($data) ? $this->order($data) : $data;
+        $data = is_array($data) ? self::order($data) : $data;
 
         if (is_iterable($data)) {
             foreach ($data as $key => $value) {
@@ -38,7 +38,7 @@ class OrderedSerializer
         return $data;
     }
 
-    private function order(array $data): array
+    private static function order(array $data): array
     {
         $filteredData = array_filter(
             $data,
