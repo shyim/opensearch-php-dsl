@@ -151,6 +151,25 @@ class FiltersAggregationTest extends \PHPUnit\Framework\TestCase
         $aggregation->addFilter(new MatchAllQuery());
     }
 
+    public function testNamedFilter(): void
+    {
+        $aggregation = new FiltersAggregation('test_agg');
+        $aggregation->addFilter(new MatchAllQuery(), 'test');
+
+        static::assertEquals(
+            [
+                'filters' => [
+                    'filters' => [
+                        'test' => [
+                            'match_all' => new \stdClass(),
+                        ],
+                    ],
+                ],
+            ],
+            $aggregation->toArray()
+        );
+    }
+
     public function testFilterNane(): void
     {
         $aggregation = new FiltersAggregation('test_agg');
