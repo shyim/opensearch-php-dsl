@@ -25,6 +25,10 @@ class TermsAggregation extends AbstractAggregation
     use BucketingTrait;
     use ScriptAwareTrait;
 
+    private ?int $size = null;
+
+    private ?int $shardSize = null;
+
     /**
      * @param string|array{id: string, params?: array<string, mixed>}|null $script
      */
@@ -36,14 +40,48 @@ class TermsAggregation extends AbstractAggregation
         $this->setScript($script);
     }
 
+    public function getSize(): ?int
+    {
+        return $this->size;
+    }
+
+    public function setSize(?int $size): self
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    public function getShardSize(): ?int
+    {
+        return $this->shardSize;
+    }
+
+    public function setShardSize(?int $shardSize): self
+    {
+        $this->shardSize = $shardSize;
+
+        return $this;
+    }
+
     public function getArray()
     {
-        return \array_filter(
+        $array = \array_filter(
             [
                 'field' => $this->getField(),
                 'script' => $this->getScript(),
             ]
         );
+
+        if ($this->getSize() !== null) {
+            $array['size'] = $this->getSize();
+        }
+
+        if ($this->getShardSize() !== null) {
+            $array['shard_size'] = $this->getShardSize();
+        }
+
+        return $array;
     }
 
     public function getType(): string

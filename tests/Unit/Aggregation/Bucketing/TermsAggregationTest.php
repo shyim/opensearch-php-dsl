@@ -42,7 +42,7 @@ class TermsAggregationTest extends \PHPUnit\Framework\TestCase
         // Case #1 terms aggregation with size.
         $aggregation = new TermsAggregation('test_agg');
         $aggregation->setField('test_field');
-        $aggregation->addParameter('size', 1);
+        $aggregation->setSize(1);
 
         $result = [
             'terms' => [
@@ -56,7 +56,7 @@ class TermsAggregationTest extends \PHPUnit\Framework\TestCase
         // Case #2 terms aggregation with zero size.
         $aggregation = new TermsAggregation('test_agg');
         $aggregation->setField('test_field');
-        $aggregation->addParameter('size', 0);
+        $aggregation->setSize(0);
 
         $result = [
             'terms' => [
@@ -69,6 +69,49 @@ class TermsAggregationTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Tests shard size method.
+     */
+    public function testTermsAggregationSetShardSize(): void
+    {
+        $aggregation = new TermsAggregation('test_agg');
+        $aggregation->setField('test_field');
+        $aggregation->setSize(1);
+        $aggregation->setShardSize(10);
+
+        $result = [
+            'terms' => [
+                'field' => 'test_field',
+                'size' => 1,
+                'shard_size' => 10,
+            ],
+        ];
+
+        static::assertEquals($aggregation->toArray(), $result);
+    }
+
+    /**
+     * Tests getSize method.
+     */
+    public function testTermsAggregationGetSize(): void
+    {
+        $aggregation = new TermsAggregation('test_agg');
+        $aggregation->setSize(5);
+
+        static::assertSame(5, $aggregation->getSize());
+    }
+
+    /**
+     * Tests getShardSize method.
+     */
+    public function testTermsAggregationGetShardSize(): void
+    {
+        $aggregation = new TermsAggregation('test_agg');
+        $aggregation->setShardSize(10);
+
+        static::assertSame(10, $aggregation->getShardSize());
+    }
+
+    /**
      * Tests minDocumentCount method.
      */
     public function testTermsAggregationMinDocumentCount(): void
@@ -76,7 +119,7 @@ class TermsAggregationTest extends \PHPUnit\Framework\TestCase
         // Case #3 terms aggregation with size and min document count.
         $aggregation = new TermsAggregation('test_agg');
         $aggregation->setField('test_field');
-        $aggregation->addParameter('size', 1);
+        $aggregation->setSize(1);
         $aggregation->addParameter('min_doc_count', 10);
 
         $result = [
@@ -215,6 +258,38 @@ class TermsAggregationTest extends \PHPUnit\Framework\TestCase
                 'script' => 'test_script',
             ],
         ], $aggregation->toArray());
+    }
+
+    /**
+     * Tests backwards compatibility of addParameter('size') with new setSize().
+     */
+    public function testTermsAggregationSizeAddParameterBackwardsCompatibility(): void
+    {
+        $viaSetter = new TermsAggregation('test_agg');
+        $viaSetter->setField('test_field');
+        $viaSetter->setSize(10);
+
+        $viaAddParameter = new TermsAggregation('test_agg');
+        $viaAddParameter->setField('test_field');
+        $viaAddParameter->addParameter('size', 10);
+
+        static::assertEquals($viaSetter->toArray(), $viaAddParameter->toArray());
+    }
+
+    /**
+     * Tests backwards compatibility of addParameter('shard_size') with new setShardSize().
+     */
+    public function testTermsAggregationShardSizeAddParameterBackwardsCompatibility(): void
+    {
+        $viaSetter = new TermsAggregation('test_agg');
+        $viaSetter->setField('test_field');
+        $viaSetter->setShardSize(20);
+
+        $viaAddParameter = new TermsAggregation('test_agg');
+        $viaAddParameter->setField('test_field');
+        $viaAddParameter->addParameter('shard_size', 20);
+
+        static::assertEquals($viaSetter->toArray(), $viaAddParameter->toArray());
     }
 
     public function testTermsAggregationIdScript(): void
