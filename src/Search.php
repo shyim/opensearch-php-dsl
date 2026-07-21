@@ -634,6 +634,7 @@ class Search
             'typed_keys',
             'pre_filter_shard_size',
             'ignore_unavailable',
+            'search_pipeline',
         ], true)) {
             $this->uriParams[$name] = $value;
         } else {
