@@ -170,7 +170,7 @@ class FiltersAggregationTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testFilterNane(): void
+    public function testFilterName(): void
     {
         $aggregation = new FiltersAggregation('test_agg');
         $aggregation->setAnonymous(true);
