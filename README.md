@@ -4,13 +4,12 @@ Introducing OpenSearch DSL library to provide objective query builder for [opens
 
 This is a fork of `ongr-io/ElasticsearchDSL`, which will be more regularly updated. Thanks for ongr-io for building this Library!
 
-If you need any help, [Github issues](https://github.com/shyim/opensearch-dsl/issues) is the preferred and recommended way to ask support questions.
+If you need any help, [Github issues](https://github.com/shyim/opensearch-php-dsl/issues) is the preferred and recommended way to ask support questions.
 
 [![Test](https://github.com/shyim/opensearch-php-dsl/actions/workflows/test.yml/badge.svg)](https://github.com/shyim/opensearch-php-dsl/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/shyim/opensearch-php-dsl/branch/main/graph/badge.svg)](https://codecov.io/gh/shyim/opensearch-php-dsl)
 [![Latest Stable Version](https://poser.pugx.org/shyim/opensearch-php-dsl/v/stable)](https://packagist.org/packages/shyim/opensearch-php-dsl)
 [![Total Downloads](https://poser.pugx.org/shyim/opensearch-php-dsl/downloads)](https://packagist.org/packages/shyim/opensearch-php-dsl)
-
 
 ## Version matrix
 
@@ -21,44 +20,51 @@ If you need any help, [Github issues](https://github.com/shyim/opensearch-dsl/is
 
 ## Documentation
 
-[The online documentation of the bundle is here](docs/index.md)
+- **[User Guide](USER_GUIDE.md)** - Comprehensive guide with examples for building queries, aggregations, sorting, and more
+- [API Documentation](docs/index.md) - Detailed reference documentation
 
-## Try it!
+## Quick Start
 
 ### Installation
 
 Install library with [composer](https://getcomposer.org):
 
 ```bash
-$ composer require shyim/opensearch-php-dsl
+composer require shyim/opensearch-php-dsl
 ```
 
-> [elasticsearch-php](https://github.com/elastic/elasticsearch-php) client is defined in the composer requirements, no need to install it.
+> **Note**: This library does **not** require `elasticsearch/elasticsearch` or `opensearch-project/opensearch-php`. It is a standalone query builder that generates arrays compatible with any OpenSearch client.
 
-### Search
-
-The library is standalone and is not coupled with any framework. You can use it in any PHP project, the only requirement is composer.  Here's the example:
-
-Create search:
+### Basic Example
 
 ```php
 <?php
 
-require 'vendor/autoload.php'; //Composer autoload
+require 'vendor/autoload.php';
 
-$client = ClientBuilder::create()->build(); //opensearch-php client
+use OpenSearchDSL\Search;
+use OpenSearchDSL\Query\MatchAllQuery;
 
-$matchAll = new OpenSearchDSL\Query\MatchAllQuery();
-
-$search = new OpenSearchDSL\Search();
-$search->addQuery($matchAll);
+$search = new Search();
+$search->addQuery(new MatchAllQuery());
 
 $params = [
-'index' => 'your_index',
-'body' => $search->toArray(),
+    'index' => 'your_index',
+    'body'  => $search->toArray(),
 ];
 
+// Use with opensearch-php client
+$client = \OpenSearch\ClientBuilder::create()->build();
 $results = $client->search($params);
 ```
 
-Opensearch DSL covers every Opensearch query, all examples can be found in [the documentation](docs/index.md)
+## Features
+
+- **Query Building**: Support for all OpenSearch query types (match, term, range, bool, geo, etc.)
+- **Aggregations**: Bucket, metric, and pipeline aggregations
+- **Sorting**: Field sorting with multiple criteria
+- **Highlighting**: Search result highlighting
+- **Suggestions**: Term, phrase, and completion suggesters
+- **Framework Agnostic**: Works with any HTTP client or OpenSearch client library
+
+For detailed examples and usage instructions, see the **[User Guide](USER_GUIDE.md)**.
